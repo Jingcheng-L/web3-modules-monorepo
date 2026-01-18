@@ -1,0 +1,132 @@
+"use client";
+
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { formatEther, parseEther } from "viem";
+import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+
+export default function AuctionPage() {
+  const { address } = useParams() as { address: string };
+  const [bidAmount, setBidAmount] = useState<string>("");
+  const { writeContractAsync, isPending } = useScaffoldWriteContract({ contractName: "AuctionETH" });
+
+  const { data: description } = useScaffoldReadContract({
+    contractName: "AuctionETH",
+    address: address,
+    functionName: "description",
+  });
+
+  const { data: highestBid } = useScaffoldReadContract({
+    contractName: "AuctionETH",
+    address: address,
+    functionName: "highestBid",
+  });
+
+  const { data: auctionEndTime } = useScaffoldReadContract({
+    contractName: "AuctionETH",
+    address: address,
+    functionName: "auctionEndTime",
+  });
+
+  const endTimeDate = auctionEndTime ? new Date(Number(auctionEndTime) * 1000) : null;
+  const isExpired = endTimeDate ? endTimeDate < new Date() : false;
+
+  return (
+    <div className="flex justify-center mt-10 px-4 pb-20">
+      <div className="card w-full max-w-md bg-base-100 shadow-xl border border-base-300">
+        <div className="card-body">
+          <div className="flex justify-center mb-2">
+            {isExpired ? (
+              <div className="badge badge-error gap-2 text-white">● Ended</div>
+            ) : (
+              <div className="badge badge-success gap-2 text-white font-bold animate-pulse">● Auction</div>
+            )}
+          </div>
+
+          <h2 className="card-title justify-center text-2xl font-bold text-primary">{description || "加载中..."}</h2>
+          <p className="text-center text-xs opacity-50 font-mono break-all">{address}</p>
+
+          <div className="bg-base-200 rounded-xl p-3 my-4 flex flex-col items-center">
+            <span className="text-xs opacity-60 uppercase font-bold">End at</span>
+            <span className={`text-sm font-semibold ${isExpired ? "text-error" : "text-base-content"}`}>
+              {endTimeDate ? endTimeDate.toLocaleString() : "Loading..."}
+            </span>
+          </div>
+
+          <div className="stats shadow bg-base-200 mb-6">
+            <div className="stat text-center">
+              <div className="stat-title">Highest Bid</div>
+              <div className="stat-value text-blue-600 text-3xl">
+                {highestBid ? formatEther(highestBid) : "0"} <span className="text-sm">ETH</span>
+              </div>
+            </div>
+          </div>
+
+          {!isExpired ? (
+            <div className="form-control w-full space-y-4">
+              <div className="join w-full">
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="Your bid"
+                  className="input input-bordered join-item w-full"
+                  value={bidAmount}
+                  onChange={e => setBidAmount(e.target.value)}
+                />
+                <div className="btn btn-disabled join-item">ETH</div>
+              </div>
+
+              <div className="card-actions justify-center mt-2">
+                <button
+                  className={`btn btn-primary px-12 ${isPending ? "loading" : ""}`}
+                  disabled={isPending || !bidAmount}
+                  onClick={async () => {
+                    try {
+                      await writeContractAsync({
+                        functionName: "bid",
+                        value: parseEther(bidAmount),
+                        address: address,
+                      });
+                      setBidAmount("");
+                    } catch (e) {
+                      console.error("Fail to bid:", e);
+                    }
+                  }}
+                >
+                  {isPending ? "Submitting..." : "Submit"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="alert alert-warning text-sm py-2">
+              <span>The auction has ended.</span>
+            </div>
+          )}
+
+          <p></p>
+          <div className="flex justify-around">
+            <button
+              className="btn btn-ghost btn-xs underline"
+              onClick={() => writeContractAsync({ functionName: "claimReturns", address: address })}
+            >
+              Withdraw
+            </button>
+
+            <button
+              className={`btn btn-ghost btn-xs underline ${isExpired ? "text-error font-bold" : "text-gray-400"}`}
+              onClick={() => writeContractAsync({ functionName: "auctionEnd", address: address })}
+            >
+              Settle
+            </button>
+            <button
+              className={`btn btn-ghost btn-xs underline text-red-400`}
+              onClick={() => writeContractAsync({ functionName: "forceEndAuction", address: address })}
+            >
+              Force End
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
