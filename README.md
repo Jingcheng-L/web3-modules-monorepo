@@ -1,4 +1,4 @@
-# Web3 Developer Suite
+# Web3 Modules Monorepo
 
 This repository contains a full-stack Web3 portfolio built with **Scaffold-ETH 2**. It demonstrates core DeFi mechanisms including an Upgradable Infrastructure, a flexible Vesting system, and gasless Permit implementations.
 
@@ -15,8 +15,8 @@ A contract to manage token release schedules for teams, investors, and advisors.
 *   **Role-Based Control**: Admin functions are protected by `AccessControl` (ready for Multi-sig integration).
 
 ### 2. Auction Protocol
-A decentralized bidding engine for ERC20 tokens/NFTs.
-*   **Anti-Sniping**: Implements "Time Extension" logic (auction extends by 5 mins if a bid is placed in the last 5 mins).
+A decentralized bidding engine for ETH, planned to extend to ERC20.
+
 *   **Pull-over-Push**: Uses a withdrawal pattern for outbid refunds to prevent Reentrancy attacks and DoS risks.
 
 ### 3. Infrastructure
@@ -38,10 +38,6 @@ A decentralized bidding engine for ERC20 tokens/NFTs.
 
 ### 1. Math & Precision
 Solidity lacks floating-point support. For the vesting curves (especially Step and Exponential), I strictly followed the **"Multiply before Divide"** rule to minimize precision loss.
-```solidity
-// Example: Step calculation
-return (totalAmount * currentStep) / totalSteps;
-```
 
 ### 2. Gas Optimization vs. UX
 
@@ -58,7 +54,7 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
 
 1. **Clone & Install**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/repo-name.git
+   git clone https://github.com/Jingcheng-L/web3-modules-monorepo.git
    yarn install
    ```
 
@@ -69,10 +65,9 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
 
 3. **Deploy Contracts**
    ```bash
-   # Deploys Token, Vesting, and Auction in order
    yarn deploy
    ```
-
+   
 4. **Start Frontend**
    ```bash
    yarn start
@@ -87,9 +82,4 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
 
 ## About Me
 
-I am a self-taught Web3 Developer with a background in Land Resource Management. My transition to engineering is driven by a strong interest in **Logic, System Architecture, and Real World Assets (RWA)**.
-
-I focus on writing clean, secure, and testable code.
-
-*   **Contact**: [Your Email / Telegram]
-*   **GitHub**: [Your GitHub Profile]
+I am a Web3 Developer. My transition to engineering is driven by a strong interest in **Logic, System Architecture, and Real World Assets (RWA)**.

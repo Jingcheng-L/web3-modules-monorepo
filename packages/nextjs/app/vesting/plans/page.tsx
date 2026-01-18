@@ -43,7 +43,7 @@ const VestingPage: NextPage = () => {
 
   const [allSchedules, setAllSchedules] = useState<any[]>([]);
   const [isLoadingSchedules, setIsLoadingSchedules] = useState(false);
-  const { data: deployedContractData } = useDeployedContractInfo("Vesting");
+  const { data: deployedContractData } = useDeployedContractInfo({ contractName: "Vesting" });
   const { data: schedulesCount } = useScaffoldReadContract({
     contractName: "Vesting",
     functionName: "getSchedulesCount",

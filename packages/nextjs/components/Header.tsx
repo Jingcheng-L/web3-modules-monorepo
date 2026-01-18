@@ -194,7 +194,6 @@ export const Header = () => {
             <Bars3Icon className="h-1/2" />
           </summary>
           <ul className="menu menu-compact dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52">
-            {/* 修复问题1：将关闭逻辑下放给子组件，而不是绑定在整个 ul 上 */}
             <HeaderMenuLinks closeMenu={closeMenu} />
           </ul>
         </details>
@@ -204,13 +203,12 @@ export const Header = () => {
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-ETH</span>
-            <span className="text-xs">Ethereum dev stack</span>
+            <span className="font-bold leading-tight">Web3Modules</span>
+            <span className="text-xs">Monorepo</span>
           </div>
         </Link>
 
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2 items-center">
-          {/* Desktop 模式不需要传 closeMenu */}
           <HeaderMenuLinks />
         </ul>
       </div>
