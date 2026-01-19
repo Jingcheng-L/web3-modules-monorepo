@@ -1,9 +1,14 @@
 # Web3 Modules Monorepo
 
-This repository contains a full-stack Web3 portfolio built with **Scaffold-ETH 2**. It demonstrates core DeFi mechanisms including an Upgradable Infrastructure, a flexible Vesting system, and gasless Permit implementations.
+This repository contains a full-stack Web3 portfolio built with [**Scaffold-ETH 2**](https://scaffoldeth.io/). It demonstrates core DeFi mechanisms including an Upgradable Infrastructure, a flexible Vesting system, and gasless Permit implementations.
 
-**Live Demo**
-**Verified Contract**
+[**Live Demo** ](https://web3-modules-monorepo-nextjs.vercel.app)  
+
+**Verified Contract on Sepolia**  
+[Vesting](https://sepolia.etherscan.io/address/0x58Ac59Da906C400603b55A3D26b6dd8FC33f0F9F)  
+[Token](https://sepolia.etherscan.io/address/0x9A66B142fe123259e5E5D29a1E40a459f28Dd6eC)  
+[Staking](https://sepolia.etherscan.io/address/0x02250455930C29a4633D0635364acF1D0765dc89)  
+[AuctionETHFactory](https://sepolia.etherscan.io/address/0xdB2D7537bdcB575310c3C371093CCBB4009e917A)
 
 ## Features & Architecture
 
@@ -53,11 +58,12 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
 ## How to Run
 
 1. **Clone & Install**
+   
    ```bash
    git clone https://github.com/Jingcheng-L/web3-modules-monorepo.git
    yarn install
    ```
-
+   
 2. **Change Administrative Address**
    
    Go to **packages/foundry/script/00_DeployAll.s.sol**, then change admin to your address.
