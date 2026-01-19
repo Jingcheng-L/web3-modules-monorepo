@@ -35,7 +35,7 @@ const AuctionCard = ({ addr }: { addr: string }) => {
   const isCardLoading = isDescLoading || description === undefined;
 
   return (
-    <Link href={`/auction/${addr}`}>
+    <Link href={`/auction-eth/${addr}`}>
       <div className="block p-6 bg-base-100 border border-base-300 rounded-xl hover:border-primary transition cursor-pointer">
         <div className="mb-2 min-h-[1.75rem] flex items-center">
           {isCardLoading ? (
