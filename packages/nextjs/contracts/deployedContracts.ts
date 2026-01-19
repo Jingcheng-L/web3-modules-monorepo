@@ -1772,7 +1772,13 @@ const deployedContracts = {
       abi: [
         {
           type: "constructor",
-          inputs: [],
+          inputs: [
+            {
+              name: "admin",
+              type: "address",
+              internalType: "address",
+            },
+          ],
           stateMutability: "nonpayable",
         },
         {
@@ -2127,7 +2133,7 @@ const deployedContracts = {
   },
   11155111: {
     Token: {
-      address: "0x5c93ca8fa76d32860f0f12d9db0594b528d779ea",
+      address: "0x9a66b142fe123259e5e5d29a1e40a459f28dd6ec",
       abi: [
         {
           type: "constructor",
@@ -2934,10 +2940,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10073963,
+      deployedOnBlock: 10074207,
     },
     Staking: {
-      address: "0x4ea93aff92b7e140507ba71569d6fc1884c4addd",
+      address: "0x02250455930c29a4633d0635364acf1d0765dc89",
       abi: [
         {
           type: "constructor",
@@ -3301,10 +3307,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10073963,
+      deployedOnBlock: 10074207,
     },
     Vesting: {
-      address: "0x1e908f446711135044a68df59febe11737e86b71",
+      address: "0x58ac59da906c400603b55a3d26b6dd8fc33f0f9f",
       abi: [
         {
           type: "constructor",
@@ -3885,14 +3891,20 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10073963,
+      deployedOnBlock: 10074207,
     },
     AuctionETHFactory: {
-      address: "0x4e21888f8222832f55b88f84997a44fb65bcf276",
+      address: "0xdb2d7537bdcb575310c3c371093ccbb4009e917a",
       abi: [
         {
           type: "constructor",
-          inputs: [],
+          inputs: [
+            {
+              name: "admin",
+              type: "address",
+              internalType: "address",
+            },
+          ],
           stateMutability: "nonpayable",
         },
         {
@@ -3995,10 +4007,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10073963,
+      deployedOnBlock: 10074207,
     },
     AuctionETH: {
-      address: "0x73a65e72b77ece9d0c6ea72c1d496f564d0960d0",
+      address: "0x710423183ccda33e898a5b9739042aaaca99dc3f",
       abi: [
         {
           type: "constructor",
@@ -4242,7 +4254,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 10073963,
+      deployedOnBlock: 10074207,
     },
   },
 } as const;

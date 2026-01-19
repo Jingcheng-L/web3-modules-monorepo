@@ -58,11 +58,20 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
    yarn install
    ```
 
+2. **Change Administrative Address**
+   
+   Go to **packages/foundry/script/00_DeployAll.s.sol**, then change admin to your address.
+   
+   ```solidity
+   address admin = <your_address>
+   ```
+   
 2. **Start Local Chain**
+   
    ```bash
    yarn chain
    ```
-
+   
 3. **Deploy Contracts**
    ```bash
    yarn deploy

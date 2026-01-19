@@ -28,13 +28,12 @@ contract DeployAll is ScaffoldETHDeploy {
      *      - Export contract addresses & ABIs to `nextjs` packages
      */
     function run() external ScaffoldEthDeployerRunner {
-        address admin = msg.sender;
+        // --- ! Change administrator address before deployment ! ---
+        address admin = 0x2E4779aB264d6e6D9D419De045470E95aFCAA22c;
         Token token = new Token(admin);
         new Staking(admin, token);
         Vesting vesting = new Vesting(admin, token);
-        // test code
-        // token.mint(address(vesting), 10000 ether);
-        new AuctionETHFactory();
+        new AuctionETHFactory(admin);
         new AuctionETH(
             address(0),
             payable(address(0)),

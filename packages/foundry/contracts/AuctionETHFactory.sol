@@ -13,8 +13,8 @@ contract AuctionETHFactory {
 
     event AuctionCreated(address auctionAddress, address creator, string description);
 
-    constructor() {
-        platformOwner = msg.sender;
+    constructor(address admin) {
+        platformOwner = admin;
     }
 
     function createAuction(
