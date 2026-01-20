@@ -25,8 +25,8 @@ contract DeployStaking is ScaffoldETHDeploy {
      *      - Export contract addresses & ABIs to `nextjs` packages
      */
     function run() external ScaffoldEthDeployerRunner {
-        address admin = 0x82bc06B58588bd3C93B47333314A20a920eb12e1;
-        address token = 0x82bc06B58588bd3C93B47333314A20a920eb12e1;
-        new Staking(admin, token);
+        address admin = address(0);
+        address token = address(0);
+        new Staking(admin, IERC20(token));
     }
 }

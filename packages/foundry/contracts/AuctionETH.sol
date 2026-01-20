@@ -2,11 +2,13 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
 /** 
  * @title Auction
  * @dev Jingcheng
  */
-contract AuctionETH {
+contract AuctionETH is ReentrancyGuard {
 
     // Definition of auction
     address public creator;
@@ -26,15 +28,6 @@ contract AuctionETH {
     // End status of auction
     uint public auctionEndTime;
     bool ended;
-    // simple reentrancy guard
-    bool private locked;
-
-    modifier nonReentrant() {
-        require(!locked, "ReentrancyGuard: reentrant call");
-        locked = true;
-        _;
-        locked = false;
-    }
 
     constructor(address _creator, address _chairperson, string memory _description, uint256 _serviceChargeRatio, uint biddingTime, address payable beneficiaryAddress) {
         require(_serviceChargeRatio <= 10000, "Service charge ratio cannot exceed 100%");
@@ -96,9 +89,9 @@ contract AuctionETH {
     }
 
     // --- Return Coins ---
-    function claimReturns() external nonReentrant {
+    function claimReturns() external {
         uint256 amount = pendingReturns[msg.sender];
-        if(amount == 0) revert();
+        if(amount == 0) revert NoBidsPlaced();
         pendingReturns[msg.sender] = 0;
         (bool sent, ) = payable(msg.sender).call{value: amount}("");
         if(!sent) revert TransferFail();

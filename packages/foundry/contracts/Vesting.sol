@@ -17,7 +17,7 @@ contract Vesting is AccessControl, ReentrancyGuard {
     bytes32 public constant SCHEDULE_MANAGER = keccak256("SCHEDULE_MANAGER");
 
     // Curve types
-    enum CurveType { LINEAR, CLIFF, STEP, EXPONENTIAL }
+    enum CurveType { LINEAR, CLIFF, STEP, EXPONENTIAL, NOTIMPLEMENTED }
 
     struct VestingSchedule {
         CurveType curve;
@@ -33,7 +33,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
     }
 
     mapping (address => VestingSchedule[]) beneficiarySchedule;
-    bool private constant management = true;
     uint256 public amountReserved = 0;
 
     constructor(address admin, IERC20 _token) {
@@ -61,7 +60,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
                         uint256 _interval,
                         bool _revokable,
                         string memory _description) public onlyRole(SCHEDULE_MANAGER) {
-        if(!management) revert NotManagable();
         if(_totalAmount == 0 || _interval == 0) revert ScheduleNotValid();
         if((_totalAmount + amountReserved) > contractBalance()) revert NotEnoughToken();
         amountReserved += _totalAmount;
@@ -80,13 +78,15 @@ contract Vesting is AccessControl, ReentrancyGuard {
     }
 
     function revokeSchedule(address account, uint256 index) public onlyRole(SCHEDULE_MANAGER) {
-        if(!management) revert NotManagable();
         if(index >= beneficiarySchedule[account].length) revert ScheduleNotExist();
 
         VestingSchedule storage sch = beneficiarySchedule[account][index];
         if(sch.revoked) revert ScheduleRevoked();
         if(sch.totalAmount == 0) revert ScheduleNotExist();
         if(!sch.revokable) revert ScheduleNotRevokable();
+        sch.totalAmount = _computeAmountToRelease(sch);
+        sch.curve = CurveType.LINEAR;
+        sch.duration = 1;
         amountReserved -= (sch.totalAmount - sch.releasedAmount);
         sch.revoked = true;
     }
@@ -95,7 +95,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
     modifier validSch(address account, uint256 index) {
         if(index >= beneficiarySchedule[account].length) revert ScheduleNotExist();
         VestingSchedule memory sch = beneficiarySchedule[account][index];
-        if(sch.totalAmount == 0 || sch.interval == 0 || sch.revoked) revert ScheduleNotValid();
         _;
     }
 
@@ -107,7 +106,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
     // --- Query claimable amount ---
     function claimableAmount(address account, uint256 index) public view validSch(account, index) returns(uint256) {
         VestingSchedule storage sch = beneficiarySchedule[account][index];
-        if(sch.revoked) revert ScheduleRevoked(); 
         uint256 toReleaseAmount = _computeAmountToRelease(sch);
         if(toReleaseAmount <= sch.releasedAmount) return 0;
         uint256 avalaibleAmount = toReleaseAmount - sch.releasedAmount;
@@ -123,7 +121,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
     function claimToken(uint256 index, uint256 amount) public validSch(msg.sender, index) nonReentrant {
         address account = msg.sender;
         VestingSchedule storage sch = beneficiarySchedule[account][index];
-        if(sch.revoked) revert ScheduleRevoked(); 
         uint256 toReleaseAmount = _computeAmountToRelease(sch);
         if(toReleaseAmount <= sch.releasedAmount) revert AvalaibleAmountNotEnough(account, 0);
         uint256 avalaibleAmount = toReleaseAmount - sch.releasedAmount;
@@ -138,7 +135,6 @@ contract Vesting is AccessControl, ReentrancyGuard {
     function claimAllToken(uint256 index) public validSch(msg.sender, index) nonReentrant {
         address account = msg.sender;
         VestingSchedule storage sch = beneficiarySchedule[account][index];
-        if(sch.revoked) revert ScheduleRevoked(); 
         uint256 toReleaseAmount = _computeAmountToRelease(sch);
         if(toReleaseAmount <= sch.releasedAmount) revert AvalaibleAmountNotEnough(account, 0);
         uint256 avalaibleAmount = toReleaseAmount - sch.releasedAmount;

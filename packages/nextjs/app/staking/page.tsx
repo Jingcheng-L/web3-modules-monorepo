@@ -127,7 +127,7 @@ const Stake: NextPage = () => {
       // 成功后重置签名数据
       setSignatureData(null);
     } catch (error) {
-      console.error("质押交易失败", error);
+      console.error("Staking Failed", error);
     }
   };
 

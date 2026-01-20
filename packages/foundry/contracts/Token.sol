@@ -16,7 +16,4 @@ contract Token is ERC20, ERC20Permit, AccessControl {
     function mint(address beneficiary, uint256 amount) external onlyRole(MANAGER) {
         _mint(beneficiary, amount);
     }
-    function burn(address target, uint256 amount) public onlyRole(MANAGER) {
-        _burn(target, amount);
-    }
 }

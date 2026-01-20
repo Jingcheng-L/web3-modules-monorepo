@@ -15,6 +15,15 @@ contract AuctionETHTest is Test {
     function setUp() public {
         vm.deal(beneficiary, 0);
         vm.deal(address(this), 0);
+        vm.expectRevert();
+        auction = new AuctionETH(
+            address(this),
+            address(this), 
+            "High frequency auction",
+            10001,
+            1 days,
+            beneficiary
+        );
         auction = new AuctionETH(
             address(this),
             address(this), 
@@ -25,8 +34,21 @@ contract AuctionETHTest is Test {
         );
     }
 
+    // --- Test No Bidders ---
+    function testNoBidders() public {
+        address admin = address(this);
+        vm.prank(admin);
+        vm.expectRevert();
+        auction.auctionEnd();
+        vm.warp(block.timestamp + 2 days + 1 seconds);
+        vm.prank(admin);
+        vm.expectRevert();
+        auction.auctionEnd();
+    }
+
     // --- Basic MultiBidder Test ---
     function testMultipleBidders() public {
+        address admin = address(this);
         address alice = makeAddr("alice");
         address bob = makeAddr("bob");
 
@@ -45,16 +67,40 @@ contract AuctionETHTest is Test {
         auction.claimReturns();
         assertEq(alice.balance, 10 ether); 
 
+        vm.prank(bob);   
+        vm.expectRevert();
+        auction.bid{value: 2 ether}();
+
         vm.warp(block.timestamp + 2 days + 1 seconds);
-        (bool success, ) = address(auction).call(abi.encodeWithSignature("auctionEnd()"));
+        vm.prank(admin);
+        auction.auctionEnd();
         assertTrue(beneficiary.balance != 0);
         assertTrue(address(this).balance != 0);
         console.log(beneficiary.balance);
         console.log(address(this).balance);
+
+        vm.prank(admin);
+        vm.expectRevert();
+        auction.auctionEnd();
+        
+        vm.prank(bob);   
+        vm.expectRevert();
+        auction.bid{value: 2 ether}();
+
+    }
+
+    // -- Force End Auction Test ---
+    function testForceEnd() public {
+        address admin = address(this);
+        vm.prank(admin);
+        auction.forceEndAuction();
+        vm.prank(admin);
+        vm.expectRevert();
+        auction.forceEndAuction();
     }
 
     // --- Fuzz Test ---
-    function testFuzz_Bidding(address bidder, uint256 amount) public {
+    function testFuzzBidding(address bidder, uint256 amount) public {
         vm.assume(bidder != address(0));
         vm.assume(bidder != address(auction));
         

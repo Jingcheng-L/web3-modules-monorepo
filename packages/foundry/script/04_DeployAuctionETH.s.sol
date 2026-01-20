@@ -25,7 +25,8 @@ contract DeployAuctionETH is ScaffoldETHDeploy {
      *      - Export contract addresses & ABIs to `nextjs` packages
      */
     function run() external ScaffoldEthDeployerRunner {
-        new AuctionETHFactory();
+        address admin = address(0);
+        new AuctionETHFactory(admin);
         new AuctionETH(
             address(0),
             payable(address(0)),

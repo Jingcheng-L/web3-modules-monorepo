@@ -94,6 +94,9 @@ For the Vesting contract, I chose to store vesting schedules in a mapping rather
    forge test
    ```
 
+## Tests
+
+![image-20260121025417015](./src/image-20260121025417015.png)
 
 ## About Me
 
