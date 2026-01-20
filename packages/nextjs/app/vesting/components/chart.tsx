@@ -55,6 +55,7 @@ const VestingChart = ({ schedule }: { schedule: any }) => {
             cursor={false}
             contentStyle={{ backgroundColor: "#1a1a1a", border: "none", borderRadius: "12px" }}
             itemStyle={{ color: "#10b981" }}
+            labelStyle={{ color: "#9ca3af", marginBottom: "4px" }}
             labelFormatter={label => `Date: ${label}`}
           />
           <Area type="monotone" dataKey="amount" stroke="#10b981" fill="#10b981" fillOpacity={0.1} strokeWidth={3} />
